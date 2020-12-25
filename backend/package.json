@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "preinstall": "npx npm-force-resolutions",
     "build": "node ace build --production",
     "start": "node server.js",
     "watch": "node ace serve --watch"
@@ -17,11 +18,19 @@
   },
   "dependencies": {
     "@adonisjs/core": "^5.0.4-preview-rc-2.1",
+    "@adonisjs/lucid": "^10.0.0",
     "@adonisjs/repl": "^1.1.6",
     "@adonisjs/session": "^4.0.6",
     "@adonisjs/view": "^3.1.0",
+    "fowc-lib": "file:../../fowc-lib",
+    "luxon": "^1.25.0",
+    "mysql": "^2.18.1",
     "proxy-addr": "^2.0.6",
     "reflect-metadata": "^0.1.13",
     "source-map-support": "^0.5.19"
+  },
+  "resolutions": {
+    "serialize-javascript": "^3.1.0",
+    "lodash": "^4.17.19"
   }
 }
