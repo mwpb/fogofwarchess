@@ -11,6 +11,9 @@ export default class LiveGame extends BaseModel {
   @column()
   public fen: string;
 
+  @column()
+  public computer_plays: number;
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime;
 

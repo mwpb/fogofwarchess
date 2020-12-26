@@ -22,3 +22,4 @@ import Route from '@ioc:Adonis/Core/Route'
 
 Route.on('/').render('welcome')
 Route.post('/live_games', 'LiveGamesController.doPost')
+Route.post('/new_socket', 'NewSocketsController.doPost')

@@ -1,4 +1,5 @@
 import m from "mithril";
+import { io } from "socket.io-client";
 
 let startGame = async () => {
   let data = await m.request({
@@ -40,6 +41,16 @@ let deleteGame = async () => {
   console.log(data);
 };
 
+let newSocket = async (socket_id: string) => {
+  let data = await m.request({
+    method: "POST",
+    url: "/new_socket",
+    body: { socket_id: socket_id },
+    withCredentials: true,
+  });
+  console.log(data);
+};
+
 let GameControls: m.Component = {
   view: () =>
     m("div", [
@@ -52,3 +63,11 @@ let GameControls: m.Component = {
 };
 
 m.render(document.body, m(GameControls));
+
+let socket = io();
+socket.on("new_socket", (data: any) => {
+  if ("socket_id" in data) newSocket(data.socket_id);
+});
+socket.on("update", (data: any) => {
+  console.log("update");
+});

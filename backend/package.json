@@ -23,11 +23,13 @@
     "@adonisjs/repl": "^1.1.6",
     "@adonisjs/session": "^4.0.6",
     "@adonisjs/view": "^3.1.0",
+    "@types/socket.io": "^2.1.12",
     "fowc-lib": "file:../../fowc-lib",
     "luxon": "^1.25.0",
     "mysql": "^2.18.1",
     "proxy-addr": "^2.0.6",
     "reflect-metadata": "^0.1.13",
+    "socket.io": "^3.0.4",
     "source-map-support": "^0.5.19",
     "tslib": "^2.0.3"
   },

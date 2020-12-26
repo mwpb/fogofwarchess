@@ -8,9 +8,11 @@ import {
   toFen,
   move,
   parseFen,
-  fromAlg,
   getMoveFromAlg,
+  getStockfishMove,
+  getHalfPosition,
 } from "fowc-lib/dist";
+import Ws from "App/Services/Ws";
 
 export default class LiveGamesController {
   public async doPost(ctx: HttpContextContract) {
@@ -27,9 +29,10 @@ export default class LiveGamesController {
 
     if (command === "start_game") {
       // Choose colors
+      let computerColor = Math.random() < 0.5 ? Color.White : Color.Black;
       let white_username = sessionId;
       let black_username = `stockfish${new Date().getTime()}`;
-      if (Math.random() < 0.5) {
+      if (computerColor === Color.White) {
         black_username = sessionId;
         white_username = `stockfish${new Date().getTime()}`;
       }
@@ -42,16 +45,21 @@ export default class LiveGamesController {
       }
 
       try {
-        await LiveGame.create({
+        log(computerColor.toString(), ctx);
+        let liveGame = await LiveGame.create({
           white_username: white_username,
           black_username: black_username,
           fen: toFen(initialPosition),
+          computer_plays: computerColor,
         });
 
+        this.notifyParticipants(liveGame);
         log(`START GAME: ${white_username} vs ${black_username}`, ctx);
         ctx.response.status(200).send({});
         return;
       } catch (err) {
+        console.log(err);
+
         log("White already playing game.", ctx);
         ctx.response.status(403).send({});
         return;
@@ -59,8 +67,10 @@ export default class LiveGamesController {
     } else if (command === "get_game") {
       let [existingGame, color] = await this.getExistingGame(sessionId);
       if (existingGame) {
+        let position = parseFen(existingGame.fen);
+        let halfPosition = getHalfPosition(position, color);
         log(`GET GAME: ${sessionId}`, ctx);
-        ctx.response.status(200).send(existingGame.toJSON());
+        ctx.response.status(200).send(halfPosition);
         return;
       }
 
@@ -95,6 +105,8 @@ export default class LiveGamesController {
       existingGame.fen = newFen;
       await existingGame.save();
 
+      this.notifyParticipants(existingGame);
+
       log(`Played move ${moveString}`, ctx);
       ctx.response.status(200).send({
         fen: newFen,
@@ -126,4 +138,33 @@ export default class LiveGamesController {
     let existing_white_game = await LiveGame.findBy("white_username", username);
     return [existing_white_game, Color.White];
   }
+
+  notifyParticipants(liveGame: LiveGame) {
+    let position = parseFen(liveGame.fen);
+    let computerPlays = liveGame.computer_plays;
+    if (computerPlays === position.colorToMove) {
+      this.stockfishPlayMove(liveGame.white_username).catch(console.log);
+    }
+    Ws.io.to(liveGame.white_username).emit("update");
+    Ws.io.to(liveGame.black_username).emit("update");
+  }
+
+  stockfishPlayMove = async (white_username: string) => {
+    let liveGame = await LiveGame.findBy("white_username", white_username);
+
+    if (!liveGame) {
+      console.log("Stockfish cannot find game.");
+
+      return;
+    }
+    let position = parseFen(liveGame.fen);
+    let moveObj = await getStockfishMove(position);
+
+    let moveResult = move(moveObj, position);
+    let newFen = toFen(moveResult.newPosition);
+    liveGame.fen = newFen;
+    await liveGame.save();
+
+    this.notifyParticipants(liveGame);
+  };
 }
