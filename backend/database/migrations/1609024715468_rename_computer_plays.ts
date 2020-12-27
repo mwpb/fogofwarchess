@@ -11,7 +11,7 @@ export default class LiveGames extends BaseSchema {
 
   public async down() {
     this.schema.table(this.tableName, (table) => {
-      table.dropColumn("computerPlays");
+      table.dropColumn("computer_plays");
     });
   }
 }
