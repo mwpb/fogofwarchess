@@ -1,0 +1,24 @@
+.grid {
+  display: grid;
+}
+
+.grid8x8 {
+  grid-template-rows: repeat(8, min(9vw, 9vh));
+  grid-template-columns: repeat(8,  min(9vw, 9vh));
+}
+
+.dark_square {
+  background-color: lightgreen;
+}
+
+.light_square {
+  background-color: aliceblue;
+}
+
+.highlight {
+  background-color: red;
+}
+
+.fog_square {
+  background-color: lightgray;
+}
