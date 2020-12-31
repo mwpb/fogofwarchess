@@ -14,6 +14,18 @@ export default class LiveGame extends BaseModel {
   @column()
   public computer_plays: number;
 
+  @column()
+  public white_time_left: number;
+
+  @column()
+  public black_time_left: number;
+
+  @column()
+  public time_of_last_move: number;
+
+  @column()
+  public status: string;
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime;
 

@@ -4,16 +4,17 @@ import { schema } from "@ioc:Adonis/Core/Validator";
 import {
   Color,
   toFen,
-  move,
   parseFen,
   getMoveFromAlg,
   getHalfPosition,
+  GameStatus,
 } from "fowc-lib/dist";
 import Ws from "App/Services/Ws";
 import { stockfishPlayMove } from "App/Utils/stockfish";
 import {
   chooseColors,
   getExistingGame,
+  makeMove,
   startLiveGame,
 } from "App/Utils/liveGameUtils";
 import GameRequest from "App/Models/GameRequest";
@@ -42,6 +43,8 @@ export default class LiveGamesController {
       await this.move(sessionId, ctx);
     } else if (command === "resign") {
       await this.resign(sessionId, ctx);
+    } else if (command === "stop_request") {
+      this.stopRequest(sessionId, ctx);
     } else {
       log("Command not found.", ctx);
       ctx.response.status(404).send({});
@@ -114,9 +117,43 @@ export default class LiveGamesController {
         existingGame.computer_plays === Color.Black
           ? existingGame.black_username
           : "you";
+
+      let time_of_last_move = existingGame.time_of_last_move;
+      let white_time_left = existingGame.white_time_left;
+      let black_time_left = existingGame.black_time_left;
+      if (position.colorToMove === Color.White) {
+        white_time_left = white_time_left - (Date.now() - time_of_last_move);
+        time_of_last_move = Date.now();
+      }
+      if (position.colorToMove === Color.Black) {
+        black_time_left = black_time_left - (Date.now() - time_of_last_move);
+        time_of_last_move = Date.now();
+      }
+
+      let status = existingGame.status;
+      if (white_time_left <= 0) {
+        white_time_left = 0;
+        status = GameStatus.BlackWins;
+      }
+      if (black_time_left <= 0) {
+        black_time_left = 0;
+        status = GameStatus.WhiteWins;
+      }
+
+      existingGame.time_of_last_move = time_of_last_move;
+      existingGame.white_time_left = white_time_left;
+      existingGame.black_time_left = black_time_left;
+      existingGame.status = status;
+
+      await existingGame.save();
+
       ctx.response.status(200).send({
         white_username: white_username,
         black_username: black_username,
+        white_time_left: white_time_left,
+        black_time_left: black_time_left,
+        time_of_last_move: time_of_last_move,
+        status: status,
         myColor: color,
         fen: toFen(halfPosition),
       });
@@ -150,15 +187,8 @@ export default class LiveGamesController {
       return;
     }
 
-    console.log(moveString);
-    
     let moveObj = getMoveFromAlg(moveString);
-    console.log(moveObj);
-    
-    let moveResult = move(moveObj, position);
-    let newFen = toFen(moveResult.newPosition);
-    existingGame.fen = newFen;
-    await existingGame.save();
+    let moveResult = await makeMove(moveObj, existingGame, position, color);
 
     let computerColor = existingGame.computer_plays;
 
@@ -170,18 +200,39 @@ export default class LiveGamesController {
     Ws.io.to(existingGame.black_username).emit("update");
 
     log(`Played move ${moveString}`, ctx);
-    ctx.response.status(200).send({
-      fen: newFen,
-      message: moveResult.message,
-    });
+    ctx.response.status(200).send({});
     return;
   }
 
   async resign(sessionId: string, ctx: HttpContextContract) {
-    let [existingGame] = await getExistingGame(sessionId);
-    if (existingGame) await existingGame.delete();
+    let [existingGame, color] = await getExistingGame(sessionId);
+    if (existingGame && color === Color.White) {
+      existingGame.status = GameStatus.WhiteResigns;
+      await existingGame.save();
+    }
+    if (existingGame && color === Color.Black) {
+      existingGame.status = GameStatus.BlackResigns;
+      await existingGame.save();
+    }
+
+    if (existingGame) {
+      Ws.io.to(existingGame.white_username).emit("update");
+      Ws.io.to(existingGame.black_username).emit("update");
+    }
 
     log(`${sessionId} resigns game`, ctx);
+    ctx.response.status(200).send({});
+    return;
+  }
+
+  async stopRequest(sessionId: string, ctx: HttpContextContract) {
+    let existingRequest = await GameRequest.findBy("username", sessionId);
+    if (existingRequest) {
+      await existingRequest.delete();
+      log(`Deleted gameRequest for ${sessionId}`, ctx);
+    } else {
+      log(`No gameRequests to delete for ${sessionId}`, ctx);
+    }
     ctx.response.status(200).send({});
     return;
   }

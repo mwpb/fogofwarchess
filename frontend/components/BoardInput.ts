@@ -20,7 +20,11 @@ let highlightedSquares = new Set<Square>();
 let selectedSquare: Square | null = null;
 
 let selectSquare = (square: Square) => {
-  if (!selectedSquare) {
+  console.log(square);
+  console.log(selectedSquare);
+  
+  
+  if (selectedSquare == null) {
     selectedSquare = square;
     let piece = position.board[square];
     if (getColor(piece) !== user_color) {
@@ -32,6 +36,8 @@ let selectSquare = (square: Square) => {
     highlightedSquares.clear();
     for (let s of vision) highlightedSquares.add(s);
   } else {
+    console.log(selectedSquare);
+    
     let legitMoves = getMoves(selectedSquare, position);
     if (legitMoves.includes(square)) {
       let selectedPiece = position.board[selectedSquare];
@@ -69,7 +75,7 @@ let squareInput = (n: number): m.Vnode => {
   if (position.board[n] === "?") classes.push("fog_square");
 
   return m(
-    "div",
+    "div.square",
     {
       class: classes.join(" "),
       onclick: () => {
@@ -83,7 +89,7 @@ let squareInput = (n: number): m.Vnode => {
 export let BoardInput: m.Component = {
   view: () =>
     m(
-      "div.grid.grid8x8",
+      "div.grid.grid8x8.darkBackground",
       Array.from({ length: 64 }, (_x, n) => squareInput(n))
     ),
 };
