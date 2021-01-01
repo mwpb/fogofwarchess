@@ -54,7 +54,8 @@ export let getStockfishMove = async (
   if (move) return move;
   try {
     let fen = toFen(position);
-    let engine = new Engine("/home/mwpb/stockfish/stockfish_20090216_x64_bmi2");
+    // let engine = new Engine("../stockfish/stockfish_20090216_x64_bmi2");
+    let engine = new Engine("fruit");
     await engine.init();
     await engine.isready();
     await engine.position(fen);

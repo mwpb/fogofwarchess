@@ -1,0 +1,6 @@
+*
+
+!build
+build/node_modules
+!fowc-lib
+fowc-lib/node_modules
