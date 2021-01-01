@@ -1,6 +1,6 @@
 {
   "name": "backend",
-  "version": "0.1.30",
+  "version": "0.1.32",
   "private": true,
   "scripts": {
     "preinstall": "npx npm-force-resolutions",
@@ -8,9 +8,10 @@
     "build:frontend": "cd ../frontend/ && npm run build",
     "start": "node server.js",
     "watch": "node ace serve --watch",
+    "deploy": "npm run build:frontend && npm run build && rm ../build.env && cp .env ../build/.env",
     "image": "cd .. && docker build -t mwpb/fowc-backend:$npm_package_version . && docker tag mwpb/fowc-backend:$npm_package_version mwpb/fowc-backend:latest",
     "push": "docker push mwpb/fowc-backend:$npm_package_version && docker push mwpb/fowc-backend:latest",
-    "deploy": "npm run build:frontend && npm run build && npm version patch && npm run image && npm run push"
+    "deploy:docker": "npm run build:frontend && npm run build && npm version patch && npm run image && npm run push"
   },
   "devDependencies": {
     "@adonisjs/assembler": "^3.0.6",

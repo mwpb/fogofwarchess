@@ -56,8 +56,13 @@ export let startLiveGame = async (
   if (blackGameRequest) await blackGameRequest.delete();
 
   // Notify participants
-  if (computerColor === Color.White) stockfishPlayMove(white_username);
-  if (computerColor === Color.Black) Ws.io.to(white_username).emit("update");
+  if (computerColor === Color.White) {
+    Ws.io.to(black_username).emit("update");
+    stockfishPlayMove(white_username);
+  }
+  if (computerColor === Color.Black) {
+    Ws.io.to(white_username).emit("update");
+  }
   if (computerColor === Color.NoColor) {
     Ws.io.to(white_username).emit("update");
     Ws.io.to(black_username).emit("update");

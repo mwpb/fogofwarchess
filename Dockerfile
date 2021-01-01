@@ -1,6 +1,7 @@
-FROM node:lts-alpine
+FROM node:lts
 
-RUN apk add git
+#RUN apk add git
+RUN apt-get update && apt-get install fruit
 
 WORKDIR /usr/src/fogofwarchess/build
 

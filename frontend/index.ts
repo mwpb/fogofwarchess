@@ -21,13 +21,15 @@ let App: m.Component = {
 
 m.mount(document.body, App);
 
-let socket = io();
-socket.on("new_socket", (data: any) => {
-  if ("socket_id" in data) newSocket(data.socket_id);
-  getGame().catch(console.log);
-});
-socket.on("update", () => {
-  getGame().catch(console.log);
-});
-
-
+let startupRoutine = async () => {
+  await getGame();
+  let socket = io();
+  socket.on("new_socket", (data: any) => {
+    if ("socket_id" in data) newSocket(data.socket_id);
+    getGame().catch(console.log);
+  });
+  socket.on("update", () => {
+    getGame().catch(console.log);
+  });
+};
+startupRoutine().catch(console.log);
