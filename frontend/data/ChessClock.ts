@@ -19,8 +19,6 @@ export let startWhiteTimer = () => {
   whiteTimer = setInterval(() => {
     let currentTime = Date.now();
     white_time_left = originalTimeLeft - (currentTime - startTime);
-    console.log(`white_time_left ${white_time_left}`);
-    
     if (white_time_left < 0) {
       stopWhiteTimer();
       getGame();
@@ -36,7 +34,6 @@ export let startBlackTimer = () => {
   blackTimer = setInterval(() => {
     let currentTime = Date.now();
     black_time_left = originalTimeLeft - (currentTime - startTime);
-    console.log(`black_time_left ${black_time_left}`);
     if (black_time_left < 0) {
       stopBlackTimer();
       getGame();

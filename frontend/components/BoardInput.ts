@@ -6,9 +6,10 @@ import {
   getMoves,
   Color,
   ordinal,
+  GameStatus,
 } from "fowc-lib/dist";
 import m from "mithril";
-import { position, sendMove, user_color } from "../data/GameData";
+import { game_status, position, sendMove, user_color } from "../data/GameData";
 import { piece2SVG } from "../images/chessPieces";
 
 let squareInputs: m.Vnode[] = [];
@@ -19,11 +20,12 @@ for (let i = 0; i < 64; i++) {
 let highlightedSquares = new Set<Square>();
 let selectedSquare: Square | null = null;
 
+export let removeSelections = () => {
+  highlightedSquares.clear();
+  selectedSquare = null;
+};
+
 let selectSquare = (square: Square) => {
-  console.log(square);
-  console.log(selectedSquare);
-  
-  
   if (selectedSquare == null) {
     selectedSquare = square;
     let piece = position.board[square];
@@ -36,8 +38,6 @@ let selectSquare = (square: Square) => {
     highlightedSquares.clear();
     for (let s of vision) highlightedSquares.add(s);
   } else {
-    console.log(selectedSquare);
-    
     let legitMoves = getMoves(selectedSquare, position);
     if (legitMoves.includes(square)) {
       let selectedPiece = position.board[selectedSquare];
@@ -87,9 +87,11 @@ let squareInput = (n: number): m.Vnode => {
 };
 
 export let BoardInput: m.Component = {
-  view: () =>
-    m(
+  view: () => {
+    if (game_status !== GameStatus.InProgress) removeSelections();
+    return m(
       "div.grid.grid8x8.darkBackground",
       Array.from({ length: 64 }, (_x, n) => squareInput(n))
-    ),
+    );
+  },
 };

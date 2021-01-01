@@ -18,6 +18,7 @@ import {
   stopWhiteTimer,
   white_time_left,
 } from "./ChessClock";
+
 export let white_username: string | null = null;
 export let black_username: string | null = null;
 export let position: Position = initialPosition;
