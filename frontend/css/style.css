@@ -1,9 +1,14 @@
 :root {
-  --darkBackground: #463f3a;
+  /* --darkBackground: #463f3a;
   --lightSquares: #bcb8b1;
   --darkSquares: #8a817c;
   --fogSquares: #646464;
-  --highlight: #ff2a6d;
+  --highlight: #ff2a6d; */
+  --darkBackground: #294345;
+  --lightSquares: #cbdadc;
+  --darkSquares: #a9c2c5;
+  --fogSquares: #649296;
+  --highlight: #a6706b;
   --hover: #85ebd9;
   --blackPieceFill: #423d3b;
   --blackPieceStroke: black;
