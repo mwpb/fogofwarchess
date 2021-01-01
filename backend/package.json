@@ -9,6 +9,7 @@
     "start": "node server.js",
     "watch": "node ace serve --watch",
     "deploy": "npm run build:frontend && npm run build && cp .env ../build/.env",
+    "restart": "pm2 restart server",
     "image": "cd .. && docker build -t mwpb/fowc-backend:$npm_package_version . && docker tag mwpb/fowc-backend:$npm_package_version mwpb/fowc-backend:latest",
     "push": "docker push mwpb/fowc-backend:$npm_package_version && docker push mwpb/fowc-backend:latest",
     "deploy:docker": "npm run build:frontend && npm run build && npm version patch && npm run image && npm run push"
