@@ -4,10 +4,26 @@
   --darkSquares: #8a817c;
   --fogSquares: #646464;
   --highlight: #ff2a6d; */
-  --darkBackground: #294345;
+  /* --darkBackground: #294345;
   --lightSquares: #cbdadc;
   --darkSquares: #a9c2c5;
   --fogSquares: #649296;
+  --highlight: #a6706b; */
+  /* --darkBackground: #000d06;
+  --lightSquares: #CCE7DA;
+  --darkSquares: #99d0b4;
+  --fogSquares: #006f37;
+  --highlight: #a2326a; */
+  /* --darkBackground: #17452b;
+  --lightSquares: #abd0bb;
+  --darkSquares: #81b99a;
+  --fogSquares: #2e8b57;
+  --highlight: #b981a0; */
+  --darkBackground: rgb(46, 46, 46);
+  --lightBackground: white;
+  --lightSquares: #cbdadc;
+  --darkSquares: #a9c2c5;
+  --fogSquares: grey;
   --highlight: #a6706b;
   --hover: #85ebd9;
   --blackPieceFill: #423d3b;
@@ -18,7 +34,7 @@
 
 body {
   margin: 0px;
-  background-color: var(--lightSquares);
+  background-color: var(--lightBackground);
 }
 
 .grid {
@@ -116,7 +132,7 @@ body {
 }
 
 .lightBackground {
-  background-color: var(--lightSquares);
+  background-color: var(--lightBackground);
 }
 .darkBackground {
   background-color: var(--darkBackground);
