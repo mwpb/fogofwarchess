@@ -1,5 +1,13 @@
 * README
 
+Fog of war chess is a variant of chess in which the player can only see square to which they can move.
+This repository provides a TypeScript implementation of fog of war chess.
+There is a proof of concept available at https://fogofwarchess.com.
+
+** fogofwarchess.com
+
+There is a proof of concept hosted at https://fogofwarchess.com.
+
 ** License
 
 All files in this directory are licensed under the GNU Affero General Public License v3.0 (AGPL).
