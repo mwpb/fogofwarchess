@@ -1,0 +1,5 @@
+* README
+
+** License
+
+All files are licensed under the GNU Affero General Public License v3.0 (AGPL).
