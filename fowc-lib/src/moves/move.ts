@@ -155,7 +155,7 @@ export let move = (move: Move, position: Position): MoveResult => {
   }
 
   // If enPassant then remove piece at enPassantTwoStep
-  if (toSquare === position.enPassantTwoStep) {
+  if (toSquare === position.enPassantOneStep && position.enPassantTwoStep) {
     newPosition.board[position.enPassantTwoStep] = Piece.Empty;
   }
 
