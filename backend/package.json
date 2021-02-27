@@ -5,10 +5,11 @@
   "scripts": {
     "build": "node ace build --production && rm -rf ../build && cp -R ./build ../build",
     "build:frontend": "cd ../frontend/ && npm run build",
+    "build:lib": "cd ../fowc-lib/ && npm run build",
     "start": "node server.js",
     "watch": "node ace serve --watch",
     "restart": "cd ../build && npm i && pm2 restart server",
-    "deploy": "npm run build:frontend && npm run build && cp .env ../build/.env && npm run restart",
+    "deploy": "npm run build:lib && npm run build:frontend && npm run build && cp .env ../build/.env && npm run restart",
     "image": "cd .. && docker build -t mwpb/fowc-backend:$npm_package_version . && docker tag mwpb/fowc-backend:$npm_package_version mwpb/fowc-backend:latest",
     "push": "docker push mwpb/fowc-backend:$npm_package_version && docker push mwpb/fowc-backend:latest",
     "deploy:docker": "npm run build:frontend && npm run build && npm version patch && npm run image && npm run push"
