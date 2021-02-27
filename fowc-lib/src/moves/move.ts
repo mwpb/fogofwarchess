@@ -143,6 +143,24 @@ export let move = (move: Move, position: Position): MoveResult => {
       newPosition.board[Square.D8] = Piece.BlackRook;
     }
   }
+  // If King or Rook move then remove castling rights
+  if (piece === Piece.WhiteKing) {
+    newPosition.whiteCanCastle = new Set();
+  } else if (piece === Piece.BlackKing) {
+    newPosition.blackCanCastle = new Set();
+  } else if (piece === Piece.WhiteRook && fromSquare === Square.A1) {
+    newPosition.whiteCanCastle = new Set<"K" | "Q">(position.whiteCanCastle);
+    newPosition.whiteCanCastle.delete("Q");
+  } else if (piece === Piece.WhiteRook && fromSquare === Square.H1) {
+    newPosition.whiteCanCastle = new Set<"K" | "Q">(position.whiteCanCastle);
+    newPosition.whiteCanCastle.delete("K");
+  } else if (piece === Piece.BlackRook && fromSquare === Square.A8) {
+    newPosition.blackCanCastle = new Set<"k" | "q">(position.blackCanCastle);
+    newPosition.blackCanCastle.delete("q");
+  } else if (piece === Piece.BlackRook && fromSquare === Square.H8) {
+    newPosition.blackCanCastle = new Set<"k" | "q">(position.blackCanCastle);
+    newPosition.blackCanCastle.delete("k");
+  }
 
   // If promotion then replace with chosen piece.
   let rankOfToSquare = coordinates(toSquare)[0];
