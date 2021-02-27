@@ -39,7 +39,8 @@
     "reflect-metadata": "^0.1.13",
     "socket.io": "^3.0.4",
     "source-map-support": "^0.5.19",
-    "tslib": "^2.0.3"
+    "tslib": "^2.0.3",
+    "marked": ">=2.0.0"
   },
   "resolutions": {
     "serialize-javascript": "^3.1.0",
