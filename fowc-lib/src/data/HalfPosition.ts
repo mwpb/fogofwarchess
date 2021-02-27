@@ -14,7 +14,7 @@ export let getHalfPosition = (position: Position, myColor: Color): Position => {
     let squareLeft = nudge(position.enPassantTwoStep, 0, -1);
     if (squareLeft) {
       let pieceLeft = position.board[squareLeft];
-      if (pieceLeft.toUpperCase() === "P" && getColor(pieceLeft) !== myColor) {
+      if (pieceLeft.toUpperCase() === "P" && getColor(pieceLeft) === myColor) {
         enPassantOneStep = position.enPassantOneStep;
         enPassantTwoStep = position.enPassantTwoStep;
       }
@@ -25,7 +25,7 @@ export let getHalfPosition = (position: Position, myColor: Color): Position => {
       let pieceRight = position.board[squareRight];
       if (
         pieceRight.toUpperCase() === "P" &&
-        getColor(pieceRight) !== myColor
+        getColor(pieceRight) === myColor
       ) {
         enPassantOneStep = position.enPassantOneStep;
         enPassantTwoStep = position.enPassantTwoStep;
