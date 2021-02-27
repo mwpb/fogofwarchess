@@ -73,7 +73,7 @@ export let enPassantFromFen = (
   let enPassantTwoStep = null;
   if (fields[3] !== "-") {
     enPassantOneStep = fromAlg(fields[3]);
-    let forwardDirection = colorToMove === Color.White ? -1 : 1;
+    let forwardDirection = colorToMove === Color.White ? 1 : -1;
     enPassantTwoStep = nudge(enPassantOneStep, forwardDirection, 0);
   }
   return [enPassantOneStep, enPassantTwoStep];
